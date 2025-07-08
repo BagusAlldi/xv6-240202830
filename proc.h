@@ -34,6 +34,14 @@ struct context {
 
 enum procstate { UNUSED, EMBRYO, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };
 
+#define MAX_PROC 64
+
+struct pinfo {
+  int pid[MAX_PROC];
+  int mem[MAX_PROC];
+  char name[MAX_PROC][16];
+};
+
 // Per-process state
 struct proc {
   uint sz;                     // Size of process memory (bytes)
