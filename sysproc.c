@@ -89,3 +89,4 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+int readcount = 0; // untuk menghitung read()
