@@ -7,6 +7,26 @@
 #include "mmu.h"
 #include "proc.h"
 
+int sys_getpinfo(void) {
+  struct pinfo *ptable;
+  if (argptr(0, (char**)&ptable, sizeof(*ptable)) < 0)
+    return -1;
+
+  struct proc *p;
+  int i = 0;
+  acquire(&ptable_lock);
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->state != UNUSED){
+      ptable->pid[i] = p->pid;
+      ptable->mem[i] = p->sz;
+      safestrcpy(ptable->name[i], p->name, sizeof(p->name));
+      i++;
+    }
+  }
+  release(&ptable_lock);
+  return 0;
+}
+
 int
 sys_fork(void)
 {
@@ -90,3 +110,6 @@ sys_uptime(void)
   return xticks;
 }
 int readcount = 0; // untuk menghitung read()
+int sys_getreadcount(void) {
+  return readcount;
+}
